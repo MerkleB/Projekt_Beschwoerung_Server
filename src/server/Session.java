@@ -1,19 +1,35 @@
 package server;
-
-import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 import game.User;
 
-public class Session {
+public class Session  implements Runnable{
 	private UUID id;
 	private User user;
 	
-	public Session(User user) throws UnsupportedEncodingException {
+	public Session(User user, UUID id){
 		this.user = user;
-		String source = user.getUserName() + user.getEmail();
-		byte[] sourceBytes = source.getBytes("UTF-8");
-		id = UUID.nameUUIDFromBytes(sourceBytes);
+		this.id = id;
+	}
+	
+	public User getUser(){
+			return this.user;
+	}
+	
+	public UUID getID() {
+		return this.id;
+	}
+
+	@Override
+	public void run() {
+//		try {
+//			while(true) {
+//				Socket clientSocket = serverSocket.accept();
+//								
+//			}
+//		}catch (IOException e) {
+//			System.out.println("-=Session interupted=-");
+//		}
 	}
 	
 }
