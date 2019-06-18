@@ -3,12 +3,15 @@ package server;
 import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import game.User;
 
 public class GameServerApplication implements Application {
 	
 	private static GameServerApplication instance = null;
+	private final Lock lock = new ReentrantLock();
 	
 	private Hashtable<UUID, SessionLike> sessions;
 	
@@ -34,6 +37,7 @@ public class GameServerApplication implements Application {
 
 	@Override
 	public SessionLike createSession(String userName, String email) {
+		lock.lock();
 		game.User user = new User(userName, email);
 		UUID sessionID = null;
 		try {
@@ -43,6 +47,7 @@ public class GameServerApplication implements Application {
 		}
 		Session session = new Session(user, sessionID);
 		sessions.put(sessionID, (SessionLike) session);
+		lock.unlock();
 		return (SessionLike) session;
 	}
 
