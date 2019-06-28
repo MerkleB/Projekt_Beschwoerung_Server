@@ -34,7 +34,7 @@ public class RequestHandler implements Runnable {
 			char[] buffer = new char[100];
 			int numberOfChars = bufferedReader.read(buffer, 0, 100);
 			String message = new String(buffer, 0, numberOfChars);
-			String[] messageValues = message.split("\\s");
+			String[] messageValues = message.split(";");
 			if(messageValues[0].compareToIgnoreCase("Exit") == 0) {
 				out.println("Server ended");
 				if ( !serverSocket.isClosed() ) {
@@ -101,7 +101,7 @@ public class RequestHandler implements Runnable {
 				char[] buffer = new char[1000];
 				int numberOfChars = reader.read(buffer, lengthOfLastMessage, lengthOfLastMessage+1000); 
 				String message = new String(buffer, 0, numberOfChars);
-				readMessage = message.split("\\s");
+				readMessage = message.split(";");
 				currentIndex = 0;
 			}
 			nextString = readMessage[currentIndex];
