@@ -3,7 +3,7 @@ import java.util.UUID;
 
 import game.User;
 
-public class Session  implements Runnable{
+public class Session  implements Runnable, SessionLike{
 	private UUID id;
 	private User user;
 	
@@ -16,9 +16,6 @@ public class Session  implements Runnable{
 			return this.user;
 	}
 	
-	public UUID getID() {
-		return this.id;
-	}
 
 	@Override
 	public void run() {
@@ -30,6 +27,11 @@ public class Session  implements Runnable{
 //		}catch (IOException e) {
 //			System.out.println("-=Session interupted=-");
 //		}
+	}
+
+	@Override
+	public UUID getUUID() {
+		return this.id;
 	}
 	
 }

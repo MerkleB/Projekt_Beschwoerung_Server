@@ -51,4 +51,9 @@ public class GameServerApplication implements Application {
 		return (SessionLike) session;
 	}
 
+	@Override
+	public void endSession(UUID sessionID) {
+		sessions.remove(sessionID);
+	}
+
 }

@@ -31,7 +31,7 @@ public class Server {
 			Thread t1 = new Thread(new NetworkService(pool, serverSocket));
 			
 			t1.start();
-			
+			System.out.println("Server started at port "+port+"!");
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run() {
 					System.out.println("Strg+C, pool.shutdown");

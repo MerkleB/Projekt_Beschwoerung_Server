@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.UUID;
 
 public class RequestHandler implements Runnable {
 	private final Socket client;
@@ -64,26 +65,33 @@ public class RequestHandler implements Runnable {
 	
 	private String processCommand(BufferedReader reader, String[] startMessage) throws IOException {
 		String returnMessage = "Session=NULL;Code=000;Message=Invalid Command";
+		String[] command = this.readCommand(reader, startMessage);
 		if(startMessage[0].equalsIgnoreCase("Login")) {
-			String[] loginCommand = this.readCommand(reader, startMessage);
 			for(int i=0; i<users.length; i++) {
 				String userName = users[i][0];
 				String email = users[i][1];
 				String password = users[i][2];
-				if(loginCommand[1].equals(userName)) {
-					if(loginCommand[2].equals(password)) {
+				if(command[1].equals(userName)) {
+					if(command[2].equals(password)) {
 						Application application = GameServerApplication.GetInstance();
 						SessionLike session = application.getSession(GameServerApplication.getUUID(userName, email));
 						
 						if(session == null) {
 							session = application.createSession(userName, email);
 							returnMessage = "Session=" + session.getUUID() + ";Code=100;Message=Login successfull";
+							break;
 						}else {
 							returnMessage = "Session=" + session.getUUID() + ";Code=501;Message=Already logged in";
+							break;
 						}			
 					}else returnMessage = "Session=NULL;Code=500;Message=User or password invalid";
 				}else returnMessage = "Session=NULL;Code=500;Message=User or password invalid";
 			}
+		}else if(startMessage[0].equalsIgnoreCase("Logout")) {
+			Application application = GameServerApplication.GetInstance();
+			UUID sessionId = UUID.fromString(command[1]);
+			application.endSession(sessionId);
+			returnMessage = "Session="+sessionId+";Code=100;Message=You we're successfully logged out";
 		}
 		return returnMessage;
 	}
